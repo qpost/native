@@ -31,11 +31,11 @@ import React, {Fragment} from 'react';
 import {SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View,} from 'react-native';
 
 import {
-	Colors,
-	DebugInstructions,
-	Header,
-	LearnMoreLinks,
-	ReloadInstructions,
+    Colors,
+    DebugInstructions,
+    Header,
+    LearnMoreLinks,
+    ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
 const App = () => {
@@ -47,11 +47,6 @@ const App = () => {
 					contentInsetAdjustmentBehavior="automatic"
 					style={styles.scrollView}>
 					<Header/>
-					{global.HermesInternal == null ? null : (
-						<View style={styles.engine}>
-							<Text style={styles.footer}>Engine: Hermes</Text>
-						</View>
-					)}
 					<View style={styles.body}>
 						<View style={styles.sectionContainer}>
 							<Text style={styles.sectionTitle}>Step One</Text>
