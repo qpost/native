@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "rnfqpost.app"
-               BlueprintName = "rnfqpost"
-               ReferencedContainer = "container:rnfqpost.xcodeproj">
+               BuildableName = "qpost.app"
+               BlueprintName = "qpost"
+               ReferencedContainer = "container:fqpost.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "rnfqpostTests.xctest"
-               BlueprintName = "rnfqpostTests"
-               ReferencedContainer = "container:rnfqpost.xcodeproj">
+               BuildableName = "qpostTests.xctest"
+               BlueprintName = "qpostTests"
+               ReferencedContainer = "container:qpost.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -61,9 +61,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "rnfqpostTests.xctest"
-               BlueprintName = "rnfqpostTests"
-               ReferencedContainer = "container:rnfqpost.xcodeproj">
+               BuildableName = "qpostTests.xctest"
+               BlueprintName = "qpostTests"
+               ReferencedContainer = "container:qpost.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -71,9 +71,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "rnfqpost.app"
-            BlueprintName = "rnfqpost"
-            ReferencedContainer = "container:rnfqpost.xcodeproj">
+            BuildableName = "qpost.app"
+            BlueprintName = "qpost"
+            ReferencedContainer = "container:qpost.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -94,9 +94,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "rnfqpost.app"
-            BlueprintName = "rnfqpost"
-            ReferencedContainer = "container:rnfqpost.xcodeproj">
+            BuildableName = "qpost.app"
+            BlueprintName = "qpost"
+            ReferencedContainer = "container:qpost.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -113,9 +113,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "rnfqpost.app"
-            BlueprintName = "rnfqpost"
-            ReferencedContainer = "container:rnfqpost.xcodeproj">
+            BuildableName = "qpost.app"
+            BlueprintName = "qpost"
+            ReferencedContainer = "container:qpost.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

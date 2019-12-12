@@ -6,8 +6,8 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 # $FabricSDKVersion = '1.6.0'
 # $CrashlyticsSDKVersion = '3.1.0'
 
-target 'rnfqpost' do
-  # Pods for rnfqpost
+target 'qpost' do
+  # Pods for qpost
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -38,7 +38,7 @@ target 'rnfqpost' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  target 'rnfqpostTests' do
+  target 'qpostTests' do
     inherit! :search_paths
     # Pods for testing
   end
@@ -46,10 +46,10 @@ target 'rnfqpost' do
   use_native_modules!
 end
 
-target 'rnfqpost-tvOS' do
-  # Pods for rnfqpost-tvOS
+target 'qpost-tvOS' do
+  # Pods for qpost-tvOS
 
-  target 'rnfqpost-tvOSTests' do
+  target 'qpost-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end

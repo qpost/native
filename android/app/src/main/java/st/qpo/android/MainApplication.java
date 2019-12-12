@@ -1,4 +1,4 @@
-package com.rnfqpost;
+package st.qpo.android;
 
 import android.app.Application;
 import android.content.Context;
