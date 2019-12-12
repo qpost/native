@@ -28,7 +28,6 @@
 import React, {Component} from 'react';
 import {Platform, StyleSheet} from 'react-native';
 import {WebView} from 'react-native-webview';
-import CookieManager from 'react-native-cookies';
 
 // TODO(you): import any additional firebase services that you require for your app, e.g for auth:
 //    1) install the npm package: `yarn add @react-native-firebase/auth@alpha` - you do not need to
@@ -48,14 +47,19 @@ const firebaseCredentials = Platform.select({
 });
 
 export default class App extends Component {
-	componentDidMount() {
-		CookieManager.setFromResponse(
-			'https://qpo.st',
-			'sesstoken=test; path=/; expires=Thu, 1 Jan 2030 00:00:00 -0000; secure')
-			.then((res) => {
-				// `res` will be true or false depending on success.
-				console.log('CookieManager.setFromResponse =>', res);
-			});
+	token = null;
+
+	handleTokenChange(token) {
+		const oldToken = this.token;
+		this.token = token || null;
+
+		if (oldToken === null && token !== null) {
+			// logged in
+			// TODO
+		} else if (oldToken !== null && token === null) {
+			// logged out
+			// TODO
+		}
 	}
 
 	render() {
@@ -71,7 +75,22 @@ export default class App extends Component {
 				)}
 			</View>*/
 			},
-				<WebView source={{uri: "https://qpo.st/"}}/>
+				<WebView source={{uri: "https://7c96ac35.ngrok.io/"}} onMessage={(event) => {
+					const message = event.nativeEvent.data;
+
+					console.log("Received message", message);
+
+					if (typeof message === "object") {
+						if (message.type) {
+							const type = message.type;
+
+							switch (type) {
+								case "token":
+									this.handleTokenChange(message.token);
+							}
+						}
+					}
+				}}/>
 		);
 	}
 }
