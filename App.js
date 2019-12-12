@@ -26,9 +26,9 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
-
-import firebase from '@react-native-firebase/app';
+import {Platform, StyleSheet} from 'react-native';
+import {WebView} from 'react-native-webview';
+import CookieManager from 'react-native-cookies';
 
 // TODO(you): import any additional firebase services that you require for your app, e.g for auth:
 //    1) install the npm package: `yarn add @react-native-firebase/auth@alpha` - you do not need to
@@ -48,9 +48,19 @@ const firebaseCredentials = Platform.select({
 });
 
 export default class App extends Component {
+	componentDidMount() {
+		CookieManager.setFromResponse(
+			'https://qpo.st',
+			'sesstoken=test; path=/; expires=Thu, 1 Jan 2030 00:00:00 -0000; secure')
+			.then((res) => {
+				// `res` will be true or false depending on success.
+				console.log('CookieManager.setFromResponse =>', res);
+			});
+	}
+
 	render() {
 		return (
-			<View style={styles.container}>
+			{/*<View style={styles.container}>
 				<Text style={styles.welcome}>Welcome to React Native + Firebase!</Text>
 				<Text style={styles.instructions}>To get started, edit App.js</Text>
 				<Text style={styles.instructions}>{instructions}</Text>
@@ -59,7 +69,9 @@ export default class App extends Component {
 						{`\nYou currently have no Firebase apps registered, this most likely means you've not downloaded your project credentials. Visit the link below to learn more. \n\n ${firebaseCredentials}`}
 					</Text>
 				)}
-			</View>
+			</View>*/
+			},
+				<WebView source={{uri: "https://qpo.st/"}}/>
 		);
 	}
 }
