@@ -26,7 +26,8 @@ const handleNotification = async (notification) => {
 		.setNotificationId(notification.notificationId)
 		.setTitle(notification.title)
 		.setBody(notification.body)
-		.android.setChannelId("qpost");
+		.android.setChannelId("qpost")
+		.android.setSmallIcon("ic_notification");
 
 	firebase.notifications().displayNotification(localNotification).then(() => {
 		console.log("Notification shown");

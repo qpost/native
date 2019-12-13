@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
   ~ Copyright (C) 2018-2019 Gigadrive - All rights reserved.
   ~ https://gigadrivegroup.com
@@ -17,7 +18,7 @@
   ~ along with this program. If not, see <https://gnu.org/licenses/>
   -->
 
-<resources>
-	<string name="app_name">qpost</string>
-	<string name="default_color">#007bff</string>
-</resources>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+	<background android:drawable="@color/ic_launcher_background"/>
+	<foreground android:drawable="@mipmap/ic_launcher_foreground"/>
+</adaptive-icon>
