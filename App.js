@@ -25,7 +25,7 @@
  * @flow
  */
 
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import {WebView} from 'react-native-webview';
 import firebase from "react-native-firebase";
 import {client as clientInfo} from "./android/app/google-services";
@@ -37,6 +37,26 @@ import handleNotification from "./NotificationHandler";
 //    2) rebuild your app via `yarn run run:android` or `yarn run run:ios`
 //    3) import the package here in your JavaScript code: `import '@react-native-firebase/auth';`
 //    4) The Firebase Auth service is now available to use here: `firebase.auth().currentUser`
+
+const CustomHeaderWebView = props => {
+	const {uri, onLoadStart, ...restProps} = props;
+	const [currentURI, setURI] = useState(props.source.uri);
+	const newSource = {...props.source, uri: currentURI};
+
+	return (
+		<WebView
+			{...restProps}
+			source={newSource}
+			onShouldStartLoadWithRequest={request => {
+				// If we're loading the current URI, allow it to load
+				if (request.url === currentURI) return true;
+				// We're loading a new URL -- change state first
+				setURI(request.url);
+				return false;
+			}}
+		/>
+	);
+};
 
 export default class App extends Component {
 	token = null;
@@ -196,7 +216,12 @@ export default class App extends Component {
 				)}
 			</View>*/
 			},
-				<WebView source={{uri: this.baseURL + "/"}} onMessage={(event) => {
+				<CustomHeaderWebView source={{
+					uri: this.baseURL + "/",
+					headers: {
+						"User-Agent": "qpost react-native android"
+					}
+				}} onMessage={(event) => {
 					let message = event.nativeEvent.data;
 
 					console.log("Received message", message);
