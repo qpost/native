@@ -71,6 +71,10 @@ export default class App extends Component {
 	removeNotificationListener = () => {
 	};
 
+	state = {
+		url: this.baseURL
+	};
+
 	componentDidMount() {
 		this.setup();
 		console.log("Google client info", JSON.stringify(clientInfo));
@@ -217,10 +221,12 @@ export default class App extends Component {
 			</View>*/
 			},
 				<CustomHeaderWebView source={{
-					uri: this.baseURL + "/",
+					uri: this.state.url,
 					headers: {
-						"User-Agent": "qpost react-native android"
+						"Q-User-Agent": "android"
 					}
+				}} onLoadStart={(navState) => {
+					this.setState({url: navState.nativeEvent.url});
 				}} onMessage={(event) => {
 					let message = event.nativeEvent.data;
 
