@@ -17,12 +17,22 @@
  * along with this program. If not, see <https://gnu.org/licenses/>
  */
 
-/**
- * @format
- */
+import firebase from "react-native-firebase";
 
-import {AppRegistry} from 'react-native';
-import App from './App';
-import {name as appName} from './app.json';
+const handleNotification = async (notification) => {
+	const localNotification = new firebase.notifications.Notification({
+		shown_in_foreground: true
+	})
+		.setNotificationId(notification.notificationId)
+		.setTitle(notification.title)
+		.setBody(notification.body)
+		.android.setChannelId("qpost");
 
-AppRegistry.registerComponent(appName, () => App);
+	firebase.notifications().displayNotification(localNotification).then(() => {
+		console.log("Notification shown");
+	}).catch(reason => {
+		console.warn("Failed to show notification", reason);
+	})
+};
+
+export default handleNotification;

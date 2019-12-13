@@ -26,8 +26,10 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet} from 'react-native';
 import {WebView} from 'react-native-webview';
+import firebase from "react-native-firebase";
+import {client as clientInfo} from "./android/app/google-services";
+import handleNotification from "./NotificationHandler";
 
 // TODO(you): import any additional firebase services that you require for your app, e.g for auth:
 //    1) install the npm package: `yarn add @react-native-firebase/auth@alpha` - you do not need to
@@ -36,30 +38,149 @@ import {WebView} from 'react-native-webview';
 //    3) import the package here in your JavaScript code: `import '@react-native-firebase/auth';`
 //    4) The Firebase Auth service is now available to use here: `firebase.auth().currentUser`
 
-const instructions = Platform.select({
-	ios: 'Press Cmd+R to reload,\nCmd+D or shake for dev menu',
-	android: 'Double tap R on your keyboard to reload,\nShake or press menu button for dev menu',
-});
-
-const firebaseCredentials = Platform.select({
-	ios: 'https://invertase.link/firebase-ios',
-	android: 'https://invertase.link/firebase-android',
-});
-
 export default class App extends Component {
 	token = null;
+	firebaseToken = null;
+	baseURL = "https://e0a22f59.ngrok.io";
+
+	tokenRefreshListener = null;
+	messageListener = null;
+
+	removeNotificationDisplayedListener = () => {
+	};
+	removeNotificationListener = () => {
+	};
+
+	componentDidMount() {
+		this.setup();
+		console.log("Google client info", JSON.stringify(clientInfo));
+	}
+
+	async setup() {
+		// Build a channel
+		const channel = new firebase.notifications.Android.Channel("qpost", "qpost Notifications", firebase.notifications.Android.Importance.Default)
+			.setDescription("qpost Notification channel");
+
+// Create the channel
+		firebase.notifications().android.createChannel(channel);
+
+		const fcmToken = await firebase.messaging().getToken();
+		if (fcmToken) {
+			// user has a device token
+			this.handleFirebaseTokenChange(fcmToken);
+		} else {
+			// user doesn't have a device token yet
+			console.warn("Failed to obtain Firebase Token");
+		}
+
+		this.tokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => {
+			// Process your token as required
+			this.handleFirebaseTokenChange(fcmToken);
+		});
+
+		this.removeNotificationDisplayedListener = firebase.notifications().onNotificationDisplayed((notification) => {
+			console.log("Displayed notification", notification);
+			// Process your notification as required
+			// ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
+		});
+		this.removeNotificationListener = firebase.notifications().onNotification((notification) => {
+			console.log("Received notification", notification);
+			// Process your notification as required
+			handleNotification(notification);
+		});
+
+		/*await firebase.messaging().requestPermission();
+
+		if(!messaging.isRegisteredForRemoteNotifications){
+			await messaging.registerForRemoteNotifications();
+		}
+
+		messaging.getToken().then(token => {
+			this.firebaseToken = token;
+			console.log("Obtained Firebase token: " + token);
+
+			this.handleFirebaseTokenChange(token);
+		}).catch(reason => {
+			console.warn("Failed to load Firebase token.", reason);
+		});
+
+		this.tokenRefreshListener = messaging.onTokenRefresh((token) => {
+			this.firebaseToken = token;
+		});
+
+		this.messageListener = messaging.onMessage(MessageHandler);*/
+	}
+
+	componentWillUnmount() {
+		this.removeNotificationDisplayedListener();
+		this.removeNotificationListener();
+	}
 
 	handleTokenChange(token) {
 		const oldToken = this.token;
 		this.token = token || null;
 
+		console.log("Detected qpost token change", token);
+
 		if (oldToken === null && token !== null) {
 			// logged in
-			// TODO
+
+			this.sendDataToServer();
 		} else if (oldToken !== null && token === null) {
 			// logged out
 			// TODO
 		}
+	}
+
+	handleFirebaseTokenChange(firebaseToken) {
+		console.log("Detected Firebase token change", firebaseToken);
+		this.firebaseToken = firebaseToken;
+
+		this.sendDataToServer();
+	}
+
+	sendDataToServer() {
+		if (this.token === null || this.firebaseToken === null) return;
+
+		console.log("Sending data to server");
+
+		let gcmKey = null;
+		if (clientInfo[0].hasOwnProperty("api_key")) {
+			clientInfo[0].api_key.forEach(key => {
+				if (key.hasOwnProperty("current_key")) {
+					gcmKey = key.current_key;
+				}
+			})
+		}
+
+		console.log("GCM Key", gcmKey);
+
+		const subscription = {
+			endpoint: "https://fcm.googleapis.com/fcm/send/" + this.firebaseToken,
+			expirationTime: null,
+			keys: {},
+			GCM: gcmKey
+		};
+
+		fetch(this.baseURL + "/webpush/", {
+			method: "POST",
+			mode: "cors",
+			credentials: "include",
+			cache: "default",
+			headers: new Headers({
+				"Accept": "application/json",
+				"Content-Type": "application/json",
+				"Authorization": "Bearer " + this.token
+			}),
+			body: JSON.stringify({
+				subscription,
+				options: {}
+			})
+		}).then(() => {
+			console.log("Webpush subscription succeeded");
+		}).catch(reason => {
+			console.warn("Failed to create webpush subscription", reason);
+		})
 	}
 
 	render() {
@@ -75,12 +196,14 @@ export default class App extends Component {
 				)}
 			</View>*/
 			},
-				<WebView source={{uri: "https://7c96ac35.ngrok.io/"}} onMessage={(event) => {
-					const message = event.nativeEvent.data;
+				<WebView source={{uri: this.baseURL + "/"}} onMessage={(event) => {
+					let message = event.nativeEvent.data;
 
 					console.log("Received message", message);
 
-					if (typeof message === "object") {
+					if (typeof message === "string") {
+						message = JSON.parse(message);
+
 						if (message.type) {
 							const type = message.type;
 
@@ -94,22 +217,3 @@ export default class App extends Component {
 		);
 	}
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: '#F5FCFF',
-	},
-	welcome: {
-		fontSize: 20,
-		textAlign: 'center',
-		margin: 10,
-	},
-	instructions: {
-		textAlign: 'center',
-		color: '#333333',
-		marginBottom: 5,
-	},
-});

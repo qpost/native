@@ -185,6 +185,8 @@ dependencies {
 	implementation project(':react-native-webview')
 	compile project(':react-native-cookies')
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "com.google.firebase:firebase-messaging:18.0.0"
+    implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     if (enableHermes) {
