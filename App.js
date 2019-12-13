@@ -72,7 +72,7 @@ export default class App extends Component {
 	};
 
 	state = {
-		url: this.baseURL
+		url: this.baseURL + "/login"
 	};
 
 	componentDidMount() {
