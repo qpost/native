@@ -61,7 +61,7 @@ const CustomHeaderWebView = props => {
 export default class App extends Component {
 	token = null;
 	firebaseToken = null;
-	baseURL = "https://e0a22f59.ngrok.io";
+	baseURL = "https://qpo.st";
 
 	tokenRefreshListener = null;
 	messageListener = null;
