@@ -232,16 +232,20 @@ export default class App extends Component {
 
 					console.log("Received message", message);
 
-					if (typeof message === "string") {
-						message = JSON.parse(message);
+					if (message && typeof message === "string") {
+						try {
+							message = JSON.parse(message);
 
-						if (message.type) {
-							const type = message.type;
+							if (message.type) {
+								const type = message.type;
 
-							switch (type) {
-								case "token":
-									this.handleTokenChange(message.token);
+								switch (type) {
+									case "token":
+										this.handleTokenChange(message.token);
+								}
 							}
+						} catch (e) {
+							console.warn("An error occurred while parsing a message", e);
 						}
 					}
 				}}/>
