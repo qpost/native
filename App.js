@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2019 Gigadrive - All rights reserved.
+ * Copyright (C) 2018-2020 Gigadrive - All rights reserved.
  * https://gigadrivegroup.com
  * https://qpo.st
  *
@@ -25,7 +25,8 @@
  * @flow
  */
 
-import React, {Component, useState} from 'react';
+import React, {Component, useState} from "react";
+import {BackHandler} from "react-native";
 import {WebView} from 'react-native-webview';
 import firebase from "react-native-firebase";
 import {client as clientInfo} from "./android/app/google-services";
@@ -43,25 +44,26 @@ const CustomHeaderWebView = props => {
 	const [currentURI, setURI] = useState(props.source.uri);
 	const newSource = {...props.source, uri: currentURI};
 
-	return (
-		<WebView
-			{...restProps}
-			source={newSource}
-			onShouldStartLoadWithRequest={request => {
-				// If we're loading the current URI, allow it to load
-				if (request.url === currentURI) return true;
-				// We're loading a new URL -- change state first
-				setURI(request.url);
-				return false;
-			}}
-		/>
-	);
+	return <WebView
+		{...restProps}
+		source={newSource}
+		ref={r => (App.webView = r)}
+		onShouldStartLoadWithRequest={request => {
+			// If we're loading the current URI, allow it to load
+			if (request.url === currentURI) return true;
+			// We're loading a new URL -- change state first
+			setURI(request.url);
+			return false;
+		}}
+	/>;
 };
 
 export default class App extends Component {
+	static webView = null;
+
 	token = null;
 	firebaseToken = null;
-	baseURL = "https://qpo.st";
+	baseURL = "https://8d344090.ngrok.io";
 
 	tokenRefreshListener = null;
 	messageListener = null;
@@ -133,6 +135,15 @@ export default class App extends Component {
 		});
 
 		this.messageListener = messaging.onMessage(MessageHandler);*/
+
+		BackHandler.addEventListener("hardwareBackPress", () => {
+			if (App.webView) {
+				App.webView.injectJavaScript("window.history.back();");
+				return true;
+			}
+
+			return false;
+		});
 	}
 
 	componentWillUnmount() {
