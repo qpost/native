@@ -63,7 +63,7 @@ export default class App extends Component {
 
 	token = null;
 	firebaseToken = null;
-	baseURL = "https://8d344090.ngrok.io";
+	baseURL = "https://qpo.st";
 
 	tokenRefreshListener = null;
 	messageListener = null;
